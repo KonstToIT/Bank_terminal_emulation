@@ -57,7 +57,7 @@ for i in clients_database:
 def interface():
 	root=Tk()
 	
-#Function to creating id entering window 
+#Functions, that creates our windows 
 	def create_enter_id_window():
 		e_id=enter_id_window(root,"Enter your id!")
 		e_id.packing_widgets()
@@ -74,23 +74,31 @@ def interface():
 	def create_enter_sum_of_transaction_window():
 		sum_of_tr_window=enter_sum_of_transaction_window(root,"Enter sum of transaction")
 		sum_of_tr_window.packing_widgets()
-#
+#==============================================
+
+#Classes for creating different windows
 
 	class window:
 		def __init__(s,master):
 			pass
+#Placing widgets on screen
 		def packing_widgets(s):
 			for k in s.__dict__.keys():
-				s.__dict__[k].grid()
+				try:
+					s.__dict__[k].grid()
+				except AttributeError:
+					pass
+#Hiding widgets
 		def hide_widgets(s):
 			for k in s.__dict__.keys():
 				try:
 					s.__dict__[k].grid_remove()
 				except AttributeError:
 					pass
-		def go_back(s,num_of_current_window):
-			all_windows[num_of_current_window-1]()
-
+#Going to previous window
+		"""def go_back(s,num_of_current_window):
+			all_windows[num_of_current_window-1]()"""
+#Entry, Label, Button window.
 	class elb_window(window):
 		def __init__(s,master):
 			s.e=Entry(master,width=20)
@@ -155,11 +163,15 @@ def interface():
 		def __init__(s,master,l_text):
 			super(after_2_chosen_enter_id_window,s).__init__(master,l_text)	
 			s.func_to_go_next_window=create_enter_sum_of_transaction_window
+			
+#Method that validates entered data and call function to create next window if entered data is correct
+#Validates if user with entered id exist in data baze
 		def enter_some_data(s):
 			try:
 				user_input=int(s.e.get())
 				global rec_id
 				rec_id=user_input
+				#Validating process
 				if (not search_by_id(user_input)) is True:
 					pass
 				else:
@@ -173,9 +185,12 @@ def interface():
 			super(enter_sum_of_transaction_window,s).__init__(master,l_text)	
 			s.func_to_go_next_window=create_enter_id_window
 			s.b["command"]=s.enter_some_data
+#Method that validates entered data and call function to create next window if entered data is correct
+#Validates if user with entered id has enough money to make transaction
 		def enter_some_data(s):
 			try:
 				summ=int(s.e.get())
+				#Validating process
 				if not search_by_id(user_id).try_tr(summ,search_by_id(rec_id)):
 					pass
 				else:
@@ -189,47 +204,6 @@ def interface():
 
 interface()
 
-
-
-"""#Function that listening clicking on "id_b" Button
-
-
-
-  print("Chose one option:")
-  print("Click '1' to check the balance of your account")
-  choice=0
-  while choice!=1 and choice!=2:
-    print("Enter 1 or 2 please")
-    choice=int(input())
-  # Setting id to not exsisting in our database value of id
-  id=len(clients_database) + 1
-
-  # Asking user to enter id, while his input is invalid(input is invalid if we haven't a client with inputed id in our database)
-  while (not search_by_id(id)) is True:
-    print("Enter your id please")
-    id=int(input())
-
-  #Realization of checking the balance 
-  if choice==1:
-    print("current state of your account:{0}".format(search_by_id(id).get_soaa()))
-
-  #Realization of doing transaction
-  else:
-  #Setting recipient id to not exsisting in our database value of id
-    rec_id=len(clients_database) + 1
-    while (not search_by_id(rec_id)) is True:
-      print("Enter recipient id please")
-      rec_id=int(input())
-
-    #Define our sender and recipient to use try_tr Method
-    sender=search_by_id(id)
-    recipient=search_by_id(rec_id)
-    print("Enter sum of transaction")
-    sum=int(input())
-    while not sender.try_tr(sum,recipient):
-      print("Enter sum of transaction")
-      sum=int(input())
-  #Starting our interface:"""
 
 
 
